@@ -47,7 +47,6 @@ class Day2(input: MutableList<String>) : Solution(input) {
     }
 
     override fun part2(input: MutableList<String>): String {
-        val moveValue = mapOf<String, Int>(Pair("A", 1), Pair("B", 2), Pair("C", 3))
         val rounds = mutableListOf<Int>()
         for (i in input) {
             val tmp = i.split(" ")
