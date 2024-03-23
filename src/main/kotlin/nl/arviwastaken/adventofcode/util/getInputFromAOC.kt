@@ -7,7 +7,6 @@ import org.jsoup.Jsoup
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import kotlin.io.path.*
 import kotlin.system.exitProcess
 
@@ -17,15 +16,27 @@ const val exampleFileName = "example.txt"
 const val inputFileName = "input.txt"
 const val adventOfCodeUrl = "https://adventofcode.com"
 var sessionToken = ""
-fun getInputAndExample() {
-    val callerclass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass
-    val (packageName, fileName) = getPackageAndName(callerclass.name)
 
-    val pathToInput = Paths.get(puzzleInputFolder, packageName, fileName)
-    val dayURI = URI.create("$adventOfCodeUrl/${packageName.getDigits()}/day/${fileName.getDigits()}")
+fun retrieveInput(): MutableList<String> {
+    val fullPackage = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name
+    return retrieveInputOrReadFile(fullPackage, inputFileName)
+}
 
-    getInput(pathToInput, dayURI)
-    getExample(pathToInput, dayURI)
+fun retrieveExample(): MutableList<String> {
+    val fullPackage = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name
+    return retrieveInputOrReadFile(fullPackage, exampleFileName)
+}
+
+private fun retrieveInputOrReadFile(fullPackage: String, fileName: String): MutableList<String> {
+    val (packageName, dayName) = getPackageAndName(fullPackage)
+    val pathToInput = Path(puzzleInputFolder, packageName, dayName)
+    val dayURI = URI.create("$adventOfCodeUrl/${packageName.getDigits()}/day/${dayName.getDigits()}")
+
+    val file = Path(pathToInput.toString(), fileName)
+    if (file.exists() && Files.readString(file).isEmpty())
+        getInput(pathToInput, dayURI)
+
+    return Files.readAllLines(file)
 }
 
 private fun getPackageAndName(fullPackage: String): Pair<String, String> {
