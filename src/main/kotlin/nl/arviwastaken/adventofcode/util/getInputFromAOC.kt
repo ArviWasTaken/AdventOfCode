@@ -19,22 +19,26 @@ var sessionToken = ""
 
 fun retrieveInput(): MutableList<String> {
     val fullPackage = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name
-    return retrieveInputOrReadFile(fullPackage, inputFileName)
-}
-
-fun retrieveExample(): MutableList<String> {
-    val fullPackage = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name
-    return retrieveInputOrReadFile(fullPackage, exampleFileName)
-}
-
-private fun retrieveInputOrReadFile(fullPackage: String, fileName: String): MutableList<String> {
     val (packageName, dayName) = getPackageAndName(fullPackage)
     val pathToInput = Path(puzzleInputFolder, packageName, dayName)
     val dayURI = URI.create("$adventOfCodeUrl/${packageName.getDigits()}/day/${dayName.getDigits()}")
 
-    val file = Path(pathToInput.toString(), fileName)
-    if (file.exists() && Files.readString(file).isEmpty())
+    val file = Path(pathToInput.toString(), inputFileName)
+    if (file.notExists())
         getInput(pathToInput, dayURI)
+
+    return Files.readAllLines(file)
+}
+
+fun retrieveExample(): MutableList<String> {
+    val fullPackage = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name
+    val (packageName, dayName) = getPackageAndName(fullPackage)
+    val pathToInput = Path(puzzleInputFolder, packageName, dayName)
+    val dayURI = URI.create("$adventOfCodeUrl/${packageName.getDigits()}/day/${dayName.getDigits()}")
+
+    val file = Path(pathToInput.toString(), exampleFileName)
+    if (file.notExists())
+        getExample(pathToInput, dayURI)
 
     return Files.readAllLines(file)
 }
