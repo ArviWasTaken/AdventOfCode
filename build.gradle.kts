@@ -11,6 +11,10 @@ repositories {
 
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+    implementation(kotlin("reflect"))
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+    implementation("org.jsoup:jsoup:1.17.2")
+
 }
 
 tasks.test {
