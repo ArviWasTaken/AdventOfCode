@@ -4,6 +4,7 @@ import nl.arviwastaken.adventofcode.Solution
 import nl.arviwastaken.adventofcode.util.getDigits
 import nl.arviwastaken.adventofcode.util.retrieveExample
 import nl.arviwastaken.adventofcode.util.retrieveInput
+import kotlin.math.abs
 
 fun main() {
     val example = retrieveExample()
@@ -27,8 +28,9 @@ class Day1(input: MutableList<String>) : Solution(input) {
         right.sort()
         var sum = 0
         for (i in left.indices) {
-            val diff = if (left[i] > right[i])  left[i] - right[i] else right[i] - left[i]
+            val diff = abs(left[i] - right[i])
             sum += diff
+
         }
 
         return sum.toString()
