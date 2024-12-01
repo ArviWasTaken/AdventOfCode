@@ -14,7 +14,6 @@ fun main() {
     Day1(input).run()
     }
 
-
 class Day1(input: MutableList<String>) : Solution(input) {
     override fun part1(input: MutableList<String>): String {
        val left = mutableListOf<Int>()
@@ -51,5 +50,4 @@ class Day1(input: MutableList<String>) : Solution(input) {
 
         return sum.toString()
     }
-
 }
