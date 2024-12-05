@@ -80,7 +80,7 @@ class Day5(input: MutableList<String>) : Solution(input) {
                 }
             } else {
                 val parts = line.split(",")
-                var pages = mutableListOf<Int>()
+                val pages = mutableListOf<Int>()
                 for (part in parts) {
                     pages.add(part.toInt())
                 }
@@ -113,15 +113,8 @@ class Day5(input: MutableList<String>) : Solution(input) {
                                     ruleIndexes.sort()
                                     val smallestIndexOfRule = ruleIndexes.first()
                                     if (i > smallestIndexOfRule) {
-                                        val newpages = mutableListOf<Int>()
                                         pages.remove(page)
-                                        for (p in pages.indices) {
-                                            if (p == smallestIndexOfRule) {
-                                                newpages.add(page)
-                                            }
-                                            newpages.add(pages[p])
-                                        }
-                                        pages = newpages
+                                        pages.add(smallestIndexOfRule , page)
                                     }
                                 }
                             }
