@@ -14,6 +14,7 @@ fun main() {
 }
 
 class Day12(input: MutableList<String>) : Solution(input) {
+    private var areas: List<Set<Pair<Int, Int>>> = listOf()
     override fun part1(input: MutableList<String>): String {
         val grid = mutableListOf<MutableList<Char>>( )
         for (i in input.indices) {
@@ -127,8 +128,9 @@ class Day12(input: MutableList<String>) : Solution(input) {
             val second = Pair(plot.first + secondxOffsets[dir], plot.second + secondyOffsets[dir])
             val diagonal = Pair(plot.first + diagonalxOffsets[dir], plot.second + diagonalyOffsets[dir])
 
-            if ((area.containsAll(listOf(first, second)) && area.none { it == diagonal }) ||
-                (area.none { it == first || it == second || it == diagonal })
+            if ((area.containsAll(listOf(first, second)) && area.none { it == diagonal}) ||
+                (area.none { it == first || it == second || it == diagonal }) ||
+                (area.none { it == first || it == second} && area.contains(diagonal))
                 ) {
                 cornerCount++
             }
