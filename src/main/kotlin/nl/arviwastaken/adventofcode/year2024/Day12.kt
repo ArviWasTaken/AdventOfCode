@@ -8,7 +8,7 @@ fun main() {
     val example = retrieveExample()
     println("Running examples for day")
     Day12(example).run()
-    val input = retrieveInput()
+     val input = retrieveInput()
     println("\nRunning inputs for day")
     Day12(input).run()
 }
@@ -86,6 +86,54 @@ class Day12(input: MutableList<String>) : Solution(input) {
     }
 
     override fun part2(input: MutableList<String>): String {
-       return ""
+        val grid = mutableListOf<MutableList<Char>>( )
+        for (i in input.indices) {
+            grid.add(input[i].toCharArray().toMutableList())
+        }
+        val visitedPlots = mutableSetOf<Pair<Int, Int>>()
+        val areas = mutableListOf<Set<Pair<Int, Int>>>()
+        for (y in grid.indices) {
+            for (x in grid[0].indices) {
+                val plot = Pair(x, y)
+                if (visitedPlots.contains(plot)) {
+                    continue
+                }
+                val area = findPlotNeighboursOfSameType(grid, visitedPlots, plot)
+                areas.add(area)
+                visitedPlots.addAll(area)
+            }
+        }
+        var total = 0
+        for (area in areas) {
+            var amountFencing = 0
+            for (plot in area) {
+                amountFencing += amountOfCorners(area, plot)
+            }
+            total += area.count() * amountFencing
+        }
+        return total.toString()
     }
+
+    private fun amountOfCorners(area: Set<Pair<Int, Int>>, plot: Pair<Int, Int>): Int {
+        val firstxOffsets =     intArrayOf(-1,  0,  1,  0)
+        val firstyOffsets =     intArrayOf( 0,  1,  0, -1)
+        val secondxOffsets =    intArrayOf( 0,  1,  0, -1)
+        val secondyOffsets  =    intArrayOf( 1,  0, -1,  0)
+        val diagonalxOffsets =  intArrayOf(-1,  1,  1, -1)
+        val diagonalyOffsets =   intArrayOf( 1,  1, -1,  -1)
+        var cornerCount = 0
+        for (dir in 0..<4) {
+            val first = Pair(plot.first + firstxOffsets[dir], plot.second + firstyOffsets[dir])
+            val second = Pair(plot.first + secondxOffsets[dir], plot.second + secondyOffsets[dir])
+            val diagonal = Pair(plot.first + diagonalxOffsets[dir], plot.second + diagonalyOffsets[dir])
+
+            if ((area.containsAll(listOf(first, second)) && area.none { it == diagonal }) ||
+                (area.none { it == first || it == second || it == diagonal })
+                ) {
+                cornerCount++
+            }
+        }
+        return cornerCount
+    }
+
 }
